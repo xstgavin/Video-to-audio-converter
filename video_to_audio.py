@@ -14,6 +14,7 @@ def video_to_audio(fileName):
 		file = pipes.quote(file)
 		video_to_wav = 'ffmpeg -i ' + file + file_extension + ' ' + file + '.wav'
 		final_audio = 'lame '+ file + '.wav' + ' ' + file + '.mp3'
+		print(video_to_wav, final_audio)
 		os.system(video_to_wav)
 		os.system(final_audio)
 		#file=pipes.quote(file)
