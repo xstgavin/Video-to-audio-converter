@@ -17,7 +17,7 @@ $ sudo apt-get install python3
 
 ### Clone:
 ```bash
-$ git clone https://github.com/adityashrm21/Video-to-audio-converter
+$ git clone https://github.com/xstgavin/Video-to-audio-converter
 $ cd ../Video-to-audio-converter
 ```
 
