@@ -3,7 +3,9 @@ A python script to convert video files into mp3 audio files. As a heavy listener
 
 
 ### Requirements:
+ffmpeg, lame are used to convert video to audio
 
+pip install librosa : librosa is used to convert audio to melgram
 
 ##### This script needs Python 3+
 
