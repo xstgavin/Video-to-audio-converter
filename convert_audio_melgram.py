@@ -50,11 +50,11 @@ def melgram_v2(audio_file_path):
 	
 
 def main():
-    audio_file_path = './aassnaulhq.mp3'
-    melgram_v1(audio_file_path, './aassnaulhq.png')
+    audio_file_path = './sample/abdgairkrk.mp3'
+    melgram_v1(audio_file_path, './sample/abdgairkrk.png')
     # melgram_v2(audio_file_path)
-    arr = compute_melgram(audio_file_path)
-    print('melgram: ', arr.shape)
+    #arr = compute_melgram(audio_file_path)
+    #print('melgram: ', arr.shape)
 
 
 if __name__ == '__main__':

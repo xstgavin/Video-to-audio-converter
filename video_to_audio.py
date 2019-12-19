@@ -1,12 +1,30 @@
 #!/usr/bin/env python3
+import os 
+import matplotlib
 
 import urllib.request
 import urllib.error
 import re
 import sys
 import time
-import os
 import pipes
+import pylab
+matplotlib.use('Agg')
+from matplotlib import pyplot as plt
+import librosa
+import librosa.display
+import numpy as np
+
+
+def melgram_v1(audio_file_path, to_file):
+	sig, fs = librosa.load(audio_file_path)
+	pylab.axis('on')  # no axis
+	pylab.axes([0., 0., 1., 1.], frameon=False, xticks=[], yticks=[])  # Remove the white edge
+	S = librosa.feature.melspectrogram(y=sig, sr=fs)
+	librosa.display.specshow(librosa.power_to_db(S, ref=np.max))
+	pylab.savefig(to_file, bbox_inches=None, pad_inches=0)
+	pylab.close()
+
 
 def video_to_audio(fileName):
 	try:
@@ -14,9 +32,13 @@ def video_to_audio(fileName):
 		file = pipes.quote(file)
 		video_to_wav = 'ffmpeg -i ' + file + file_extension + ' ' + file + '.wav'
 		final_audio = 'lame '+ file + '.wav' + ' ' + file + '.mp3'
+		rm_wav = 'rm '+file+'.wav'
 		print(video_to_wav, final_audio)
 		os.system(video_to_wav)
 		os.system(final_audio)
+		os.system(rm_wav)
+		if os.path.exists(file+'.mp3'):
+			melgram_v1(file+'.mp3',file+'.png')
 		#file=pipes.quote(file)
 		#os.remove(file + '.wav')
 		print("sucessfully converted ", fileName, " into audio!")
