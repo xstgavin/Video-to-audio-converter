@@ -31,14 +31,14 @@ def video_to_audio(fileName):
 		file, file_extension = os.path.splitext(fileName)
 		file = pipes.quote(file)
 		video_to_wav = 'ffmpeg -i ' + file + file_extension + ' ' + file + '.wav'
-		final_audio = 'lame '+ file + '.wav' + ' ' + file + '.mp3'
+		#final_audio = 'lame '+ file + '.wav' + ' ' + file + '.mp3'
 		rm_wav = 'rm '+file+'.wav'
-		print(video_to_wav, final_audio)
+		#print(video_to_wav, final_audio)
 		os.system(video_to_wav)
-		os.system(final_audio)
+		#os.system(final_audio)
 		os.system(rm_wav)
-		if os.path.exists(file+'.mp3'):
-			melgram_v1(file+'.mp3',file+'.png')
+		if os.path.exists(file+'.wav'):
+			melgram_v1(file+'.wav',file+'.png')
 		#file=pipes.quote(file)
 		#os.remove(file + '.wav')
 		print("sucessfully converted ", fileName, " into audio!")
@@ -60,7 +60,11 @@ def main():
 			print(err.reason)
 			exit(1)
 		# convert video to audio
-		video_to_audio(filePath)
+		if filePath.find('.wav') >=0 or filePath.find('.mp3'):
+			print('just generate melgram')
+			melgram_v1(filePath,filePath[:-3]+'png')
+		else:
+			video_to_audio(filePath)
 		time.sleep(1)
 		
 # install ffmpeg and/or lame if you get an error saying that the program is currently not installed 
