@@ -14,7 +14,7 @@ from matplotlib import pyplot as plt
 import librosa
 import librosa.display
 import numpy as np
-
+import glob
 
 def melgram_v1(audio_file_path, to_file):
 	sig, fs = librosa.load(audio_file_path)
@@ -30,13 +30,13 @@ def video_to_audio(fileName):
 	try:
 		file, file_extension = os.path.splitext(fileName)
 		file = pipes.quote(file)
-		video_to_wav = 'ffmpeg -i ' + file + file_extension + ' ' + file + '.wav'
+		video_to_wav = 'ffmpeg -v 0 -i ' + file + file_extension + ' ' + file + '.wav'
 		#final_audio = 'lame '+ file + '.wav' + ' ' + file + '.mp3'
 		rm_wav = 'rm '+file+'.wav'
 		#print(video_to_wav, final_audio)
 		os.system(video_to_wav)
 		#os.system(final_audio)
-		os.system(rm_wav)
+		#os.system(rm_wav)
 		if os.path.exists(file+'.wav'):
 			melgram_v1(file+'.wav',file+'.png')
 		#file=pipes.quote(file)
@@ -45,6 +45,14 @@ def video_to_audio(fileName):
 	except OSError as err:
 		print(err.reason)
 		exit(1)
+
+def extract_train_mel():
+    path = '/home/xiaoshengtao/hdd/DATA/deepfake-detection-challenge/train_videos/dfdc_train_part_'
+    for i in range(45,50):
+        fPath = path + '%d/'%i
+        mp4s = glob.glob(fPath+'*.mp4')
+        for mp4 in mp4s:
+            video_to_audio(mp4)
 
 def main():
 	if len(sys.argv) <1 or len(sys.argv) > 2:
@@ -60,7 +68,7 @@ def main():
 			print(err.reason)
 			exit(1)
 		# convert video to audio
-		if filePath.find('.wav') >=0 or filePath.find('.mp3'):
+		if filePath.find('.wav') >=0 or filePath.find('.mp3')>=0:
 			print('just generate melgram')
 			melgram_v1(filePath,filePath[:-3]+'png')
 		else:
@@ -69,4 +77,5 @@ def main():
 		
 # install ffmpeg and/or lame if you get an error saying that the program is currently not installed 
 if __name__ == '__main__':
+    #extract_train_mel()
 	main()
