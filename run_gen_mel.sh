@@ -1,9 +1,4 @@
 #python video_to_audio.py 45
-#nohup python video_to_audio.py 45 &
-#nohup python video_to_audio.py 46 &
-#nohup python video_to_audio.py 47 &
-#nohup python video_to_audio.py 48 &
-#nohup python video_to_audio.py 49
 #nohup python video_to_audio.py  0 &
 #nohup python video_to_audio.py  1 &
 #nohup python video_to_audio.py  2 &
@@ -35,7 +30,6 @@
 #nohup python video_to_audio.py  28 &
 #nohup python video_to_audio.py  29 &
 #nohup python video_to_audio.py  30
-nohup python video_to_audio.py  4 & 
 nohup python video_to_audio.py  31 &
 nohup python video_to_audio.py  32 &
 nohup python video_to_audio.py  33 &
@@ -50,4 +44,4 @@ nohup python video_to_audio.py  41 &
 nohup python video_to_audio.py  42 &
 nohup python video_to_audio.py  43 &
 nohup python video_to_audio.py  44 
-#
+##

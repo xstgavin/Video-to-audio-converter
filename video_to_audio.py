@@ -59,7 +59,7 @@ def audio_downsample(audio_file):
         downsample = "ffmpeg  -v 0 -i "+audio_file+" -ac 1 -ar "+\
                 ar+" "+dstName
         os.system(downsample) 
-        melgram_v1(dstName,dstName[:-3]+'png')
+        melgram_v1(dstName,dstName.split('.')[0]+'png')
         os.system("rm "+dstName)
  
 
@@ -95,13 +95,13 @@ def video_to_audio(fileName):
         print(err.reason)
         exit(1)
 
-def extract_train_mel():
+def extract_train_mel(pid=0):
     path = '/home/xiaoshengtao/hdd/DATA/deepfake-detection-challenge/train_videos/dfdc_train_part_'
-    for i in range(45,50):
-        fPath = path + '%d/'%i
-        mp4s = glob.glob(fPath+'*.mp4')
-        for mp4 in mp4s:
-            video_to_audio(mp4)
+#    for i in range(45,50):
+    fPath = path + '%d/'%pid
+    mp4s = glob.glob(fPath+'*.mp4')
+    for mp4 in mp4s:
+        video_to_audio(mp4)
 
 def aug_org_mel(partid=1):
     jdat = json.load(open('./labels/all_label.json','r'))
@@ -163,9 +163,9 @@ def main():
             print(err.reason)
             exit(1)
         # convert video to audio
-        if filePath.find('.wav') >=0 or filePath.find('.mp3')>=0:
+        if filePath.find('.wav') >=0 or filePath.find('.mp3')>=0 or filePath.find('.flac')>=0:
             print('just generate melgram')
-            melgram_v1(filePath,filePath[:-3]+'png')
+            melgram_v1(filePath,filePath.split('.')[0]+'png')
             audio_downsample_test(filePath)        
         else:
             video_to_audio(filePath)
@@ -173,7 +173,7 @@ def main():
         
 # install ffmpeg and/or lame if you get an error saying that the program is currently not installed 
 if __name__ == '__main__':
-    #extract_train_mel()
-    #main()
+    #extract_train_mel(int(sys.argv[1]))
+    main()
     #aug_train_mel()
-    aug_org_mel(int(sys.argv[1]))
+    #aug_org_mel(int(sys.argv[1]))
