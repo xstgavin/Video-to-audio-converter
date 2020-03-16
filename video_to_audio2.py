@@ -19,7 +19,6 @@ import subprocess
 import json
 import cv2
 import torchaudio
-import random
 
 mel_option = 'v2'
 
@@ -31,13 +30,13 @@ def ffprobe(filename):
 
 
 
-def audio_downsample_test(audio_file,delete = True,dsize=8):
+def audio_downsample_test(audio_file,delete = True):
     #reduce sample rate of the audio
     afname = audio_file.split('.wav')[0]
     jdat=ffprobe(audio_file)
     augments = []
     ars=['8000','11025','16000','22050','24000','32000','44100','48000']
-    for ar in ars[:dsize]:
+    for ar in ars:
         dstName = afname + "_"+ar+"_aug.wav"
 #        downsample = "ffmpeg  -i "+audio_file+" -b:a "+ba+" -acodec mp3 -ac 1 -ar "+\
 #                ar+" "+dstName
@@ -71,18 +70,14 @@ def audio_downsample(audio_file):
             melgram_v1(dstName,dstName.split('.')[0]+'.png')
             os.system("rm "+dstName)
         else:
-            print(dstName.split('.')[0]+'.png')
+            print(dstName.split('.')[0]+'png')
             melgram_v2(dstName,dstName.split('.')[0]+'.png')
             os.system("rm "+dstName)
            
  
 def melgram_v2(audio_file_path, to_file):
     sig, fs = librosa.load(audio_file_path)
-    a = random.randint(-6,6)
-    sig = librosa.effects.pitch_shift(sig, fs, n_steps=a)
-    #sig = sig+np.random.randn(len(sig))*0.001
-    S = librosa.feature.melspectrogram(y=sig, sr=fs, n_mels=512,hop_length=512) # change hop_length to change y_axis
-    
+    S = librosa.feature.melspectrogram(y=sig, sr=fs, n_mels=512, hop_length=256)
     D = (librosa.power_to_db(S, ref=np.max)+80)*2
     imgDat = np.flip(np.abs(np.round(D)),0).astype(np.uint8)
     #imgDat = cv2.resize(imgDat,(640,480))
@@ -149,39 +144,7 @@ def aug_org_mel(partid=1):
         if not os.path.exists(wav):
            continue
         audio_downsample(wav)
-
-def aug_flac_mel(save_root= '/home/xiaoshengtao/audio/'):
-    path = '/home/xiaoshengtao/hdd/DATA/audio/LibriSpeech/train-clean-100/'
-    jdat = json.load(open(path+"flac.json",'r'))
-    ars=['8000','11025','16000']
-
-    for key in jdat.keys():
-        durations = jdat[key]['durations']
-        idx = np.argsort(durations)
-        sample_count= 0
-        flac_paths = []
-        for i in range(-1,len(idx)-1):
-            if sample_count>=6:
-                break
-            absIdx=idx[i]
-            flac_path = path+jdat[key]['names'][absIdx][2:]
-            if not os.path.exists(flac_path):
-                print(flac_path+'missing')
-            if durations[absIdx]<10:
-                continue
-            else:
-                flac_paths.append(flac_path)
-                sample_count = sample_count+1
-        for flacPath in flac_paths:
-            afname = flacPath.split('/')[-1]
-            print(flacPath, afname)
-            for ar in ars:
-                dstName = save_root+afname.split('.')[0]+"_"+ar+".wav"
-                downsample = "ffmpeg  -v 0 -i "+flacPath+" -ac 1 -ar "+ar+" "+dstName
-                os.system(downsample) 
-                melgram_v2(dstName,dstName.split('.')[0]+'.png')
-                os.system("rm "+dstName)
-      
+       
 def aug_train_mel():
     path = '/home/xiaoshengtao/hdd/DATA/deepfake-detection-challenge/train_videos/dfdc_train_part_'
     if len(sys.argv)==2:
@@ -234,5 +197,4 @@ if __name__ == '__main__':
     #extract_train_mel(int(sys.argv[1]))
     main()
     #aug_train_mel()
-    #aug_flac_mel()
     #aug_org_mel(int(sys.argv[1]))
